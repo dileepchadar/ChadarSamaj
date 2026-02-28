@@ -37,7 +37,7 @@ const formatRow = (row) => {
     const obj = {};
     const headers = row._sheet.headerValues;
     for (const key of headers) {
-        let val = row.get(key);
+        let val = row[key];
         if (val === 'TRUE') val = true;
         if (val === 'FALSE') val = false;
         
@@ -47,7 +47,12 @@ const formatRow = (row) => {
         }
         obj[key] = val;
     }
-    obj._row = row; // store reference for updating/deleting
+    Object.defineProperty(obj, '_row', {
+        value: row,
+        enumerable: false, // Prevents JSON.stringify from including this circular property
+        writable: true,
+        configurable: true
+    });
     return obj;
 };
 
@@ -84,14 +89,14 @@ const sheetDB = {
     update: async (collection, id, updates) => {
         const sheet = doc.sheetsByTitle[collection];
         const rows = await sheet.getRows();
-        const row = rows.find(r => r.get('_id') == id);
+        const row = rows.find(r => r._id == id);
         if (!row) return null;
         
         for (const [key, val] of Object.entries(updates)) {
             let newVal = val;
             if (key === 'photos') newVal = JSON.stringify(val);
             if (typeof val === 'boolean') newVal = val ? 'TRUE' : 'FALSE';
-            row.assign({ [key]: newVal });
+            row[key] = newVal;
         }
         await row.save();
         return formatRow(row);
@@ -99,7 +104,7 @@ const sheetDB = {
     delete: async (collection, id) => {
         const sheet = doc.sheetsByTitle[collection];
         const rows = await sheet.getRows();
-        const row = rows.find(r => r.get('_id') == id);
+        const row = rows.find(r => r._id == id);
         if (row) {
             await row.delete();
             return true;
