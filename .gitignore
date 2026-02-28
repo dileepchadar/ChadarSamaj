@@ -1,0 +1,17 @@
+node_modules
+.DS_Store
+.env
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Server specific
+server/uploads/*
+!server/uploads/.gitkeep
+server/data.json
+
+# Client specific
+client/dist
+client/dist-ssr
+client/coverage
+client/*.local
