@@ -21,7 +21,7 @@ if (USE_SHEETS) {
                 console.log(`Creating missing sheet: ${name}`);
                 const headers = name === 'profiles' ? 
                     ['_id', 'createdAt', 'name', 'gender', 'age', 'height', 'maritalStatus', 'religion', 'caste', 'education', 'occupation', 'village', 'district', 'state', 'mobile', 'description', 'familyDetails', 'userId', 'photos', 'isApproved', 'gotra', 'fatherName', 'motherName', 'disability'] : 
-                    name === 'users' ? ['_id', 'createdAt', 'mobile', 'role'] :
+                    name === 'users' ? ['_id', 'createdAt', 'mobile', 'role', 'password'] :
                     ['_id', 'createdAt', 'profileId', 'reason', 'reportedBy'];
                 
                 await doc.addSheet({ title: name, headerValues: headers });

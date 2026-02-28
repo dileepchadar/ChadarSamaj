@@ -1,15 +1,19 @@
 const express = require('express');
+const bcrypt = require('bcryptjs');
 const router = express.Router();
 const db = require('../db');
 
 // Register
 router.post('/register', async (req, res) => {
-  const { mobile } = req.body;
+  const { mobile, password } = req.body;
+  if (!password || password.length < 6) return res.status(400).json({ message: 'Password must be at least 6 characters long' });
+
   try {
     let user = await db.findOne('users', { mobile });
     if (user) return res.status(400).json({ message: 'User already exists' });
 
-    user = await db.create('users', { mobile, role: 'user' });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    user = await db.create('users', { mobile, role: 'user', password: hashedPassword });
     
     res.json({ message: 'Registration successful', userId: user._id });
   } catch (err) {
@@ -19,10 +23,23 @@ router.post('/register', async (req, res) => {
 
 // Login
 router.post('/login', async (req, res) => {
-  const { mobile } = req.body;
+  const { mobile, password } = req.body;
+  if (!password) return res.status(400).json({ message: 'Password is required' });
+
   try {
     const user = await db.findOne('users', { mobile });
     if (!user) return res.status(404).json({ message: 'User not found. Please register.' });
+
+    if (user.password) {
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) return res.status(400).json({ message: 'Invalid mobile or password' });
+    } else {
+        // Fallback for existing users created before passwords existed
+        if (password.length < 6) return res.status(400).json({ message: 'Password must be at least 6 characters long' });
+        const hashedPassword = await bcrypt.hash(password, 10);
+        await db.update('users', user._id, { password: hashedPassword });
+        user.password = hashedPassword;
+    }
 
     // Admin Check Logic (Simple)
     if (mobile === 'admin' || mobile === '9999999999') {

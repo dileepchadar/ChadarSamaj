@@ -5,14 +5,18 @@ import { AuthContext } from '../../context/AuthContext';
 
 const Login = () => {
   const [mobile, setMobile] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (password.length < 6) {
+      return setError('Password must be at least 6 characters long');
+    }
     try {
-      const res = await axios.post('http://localhost:5001/api/auth/login', { mobile });
+      const res = await axios.post('http://localhost:5001/api/auth/login', { mobile, password });
       login(res.data.userId, res.data.role);
       navigate('/');
     } catch (err) {
@@ -32,6 +36,16 @@ const Login = () => {
             value={mobile} 
             onChange={(e) => setMobile(e.target.value)} 
             placeholder="Enter 10 digit mobile number"
+            required 
+          />
+        </div>
+        <div>
+          <label>Password</label>
+          <input 
+            type="password" 
+            value={password} 
+            onChange={(e) => setPassword(e.target.value)} 
+            placeholder="Enter your password"
             required 
           />
         </div>
