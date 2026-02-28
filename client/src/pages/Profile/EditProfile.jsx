@@ -104,7 +104,7 @@ const EditProfile = () => {
         {/* Basic Details */}
         <div className="md:col-span-2"><h3 className="text-xl font-bold border-b pb-2">Basic Details</h3></div>
         
-        <div><label>Full Name</label><input name="name" value={formData.name} onChange={handleChange} required /></div>
+        <div><label>Full Name <span className="text-red-500">*</span></label><input name="name" value={formData.name} onChange={handleChange} required /></div>
         <div>
             <label>Gender</label>
             <select name="gender" value={formData.gender} onChange={handleChange}>
@@ -112,7 +112,7 @@ const EditProfile = () => {
                 <option value="Female">Female</option>
             </select>
         </div>
-        <div><label>Age</label><input name="age" type="number" value={formData.age} onChange={handleChange} required /></div>
+        <div><label>Age <span className="text-red-500">*</span></label><input name="age" type="number" value={formData.age} onChange={handleChange} required /></div>
         <div><label>Height</label><input name="height" value={formData.height} onChange={handleChange} placeholder="e.g. 5'9" /></div>
         <div>
             <label>Marital Status</label>
@@ -126,15 +126,15 @@ const EditProfile = () => {
         {/* Family Details */}
         <div className="md:col-span-2"><h3 className="text-xl font-bold border-b pb-2 mt-4">Family Information</h3></div>
         
-        <div><label>Father's Name</label><input name="fatherName" value={formData.fatherName || ''} onChange={handleChange} required /></div>
-        <div><label>Mother's Name</label><input name="motherName" value={formData.motherName || ''} onChange={handleChange} required /></div>
-        <div><label>Gotra</label><input name="gotra" value={formData.gotra || ''} onChange={handleChange} required /></div>
+        <div><label>Father's Name <span className="text-red-500">*</span></label><input name="fatherName" value={formData.fatherName || ''} onChange={handleChange} required /></div>
+        <div><label>Mother's Name <span className="text-red-500">*</span></label><input name="motherName" value={formData.motherName || ''} onChange={handleChange} required /></div>
+        <div><label>Gotra <span className="text-red-500">*</span></label><input name="gotra" value={formData.gotra || ''} onChange={handleChange} required /></div>
 
         {/* Social Details */}
         <div className="md:col-span-2"><h3 className="text-xl font-bold border-b pb-2 mt-4">Social & Education</h3></div>
         
-        <div><label>Religion</label><input name="religion" value={formData.religion} onChange={handleChange} required /></div>
-        <div><label>Caste</label><input name="caste" value={formData.caste} onChange={handleChange} required /></div>
+        <div><label>Religion <span className="text-red-500">*</span></label><input name="religion" value={formData.religion} onChange={handleChange} required /></div>
+        <div><label>Caste <span className="text-red-500">*</span></label><input name="caste" value={formData.caste} onChange={handleChange} required /></div>
         <div><label>Education</label><input name="education" value={formData.education} onChange={handleChange} /></div>
         <div><label>Occupation</label><input name="occupation" value={formData.occupation} onChange={handleChange} /></div>
 
@@ -143,10 +143,10 @@ const EditProfile = () => {
         {/* Location & Contact */}
         <div className="md:col-span-2"><h3 className="text-xl font-bold border-b pb-2 mt-4">Location & Contact</h3></div>
 
-        <div><label>Village</label><input name="village" value={formData.village} onChange={handleChange} required /></div>
-        <div><label>District</label><input name="district" value={formData.district} onChange={handleChange} required /></div>
-        <div><label>State</label><input name="state" value={formData.state} onChange={handleChange} required /></div>
-        <div><label>Mobile Number (For Contact)</label><input name="mobile" value={formData.mobile} onChange={handleChange} required /></div>
+        <div><label>Village <span className="text-red-500">*</span></label><input name="village" value={formData.village} onChange={handleChange} required /></div>
+        <div><label>District <span className="text-red-500">*</span></label><input name="district" value={formData.district} onChange={handleChange} required /></div>
+        <div><label>State <span className="text-red-500">*</span></label><input name="state" value={formData.state} onChange={handleChange} required /></div>
+        <div><label>Mobile Number (For Contact) <span className="text-red-500">*</span></label><input name="mobile" value={formData.mobile} onChange={handleChange} required /></div>
 
         {/* Extra */}
         <div className="md:col-span-2"><label>About Me</label><textarea name="description" value={formData.description} onChange={handleChange} rows="3"></textarea></div>
