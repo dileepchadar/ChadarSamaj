@@ -6,7 +6,7 @@ import { LanguageContext } from '../../context/LanguageContext';
 
 const ProfileDetails = () => {
   const { id } = useParams();
-  const { user } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
   const { t } = useContext(LanguageContext);
   const [profile, setProfile] = useState(null);
   const [showContact, setShowContact] = useState(false);
@@ -109,6 +109,20 @@ const ProfileDetails = () => {
       }
   };
 
+  const handleAccountDelete = async () => {
+      const confirmStr = t('deleteAccountConfirm') || 'Are you sure you want to permanently delete your account and profile? This action cannot be undone.';
+      if(!window.confirm(confirmStr)) return;
+      try {
+          await axios.delete(`http://localhost:5001/api/auth/${user.userId}`);
+          logout();
+          alert(t('accountDeleted') || 'Account deleted successfully.');
+          navigate('/');
+      } catch (err) {
+          console.error(err);
+          alert(t('errorDeletingAccount') || 'Error deleting account.');
+      }
+  };
+
   if (!profile) return <div className="p-10 text-center">Loading...</div>;
 
   return (
@@ -142,7 +156,10 @@ const ProfileDetails = () => {
                     <button onClick={handleDelete} className="bg-red-600 text-white px-3 py-1 rounded text-sm">Delete (Admin)</button>
                 )}
                 {user && user.userId === profile.userId && (
-                    <button onClick={() => navigate('/edit-profile')} className="bg-primary text-white px-3 py-1 rounded text-sm ml-2">{t('editProfile')}</button>
+                    <div className="flex flex-col sm:flex-row gap-2 ml-2">
+                        <button onClick={() => navigate('/edit-profile')} className="bg-primary text-white px-3 py-1 rounded text-sm whitespace-nowrap">{t('editProfile')}</button>
+                        <button onClick={handleAccountDelete} className="bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded text-sm whitespace-nowrap">Delete Account</button>
+                    </div>
                 )}
             </div>
 

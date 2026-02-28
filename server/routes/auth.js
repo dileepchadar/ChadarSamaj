@@ -38,4 +38,26 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// Delete Account
+router.delete('/:id', async (req, res) => {
+  try {
+    const userId = req.params.id;
+    
+    // Find profile associated with this user
+    const profile = await db.findOne('profiles', { userId });
+    
+    // If profile exists, delete it first
+    if (profile) {
+        await db.delete('profiles', profile._id);
+    }
+    
+    // Then delete the user
+    await db.delete('users', userId);
+    
+    res.json({ message: 'Account and associated profile deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;
