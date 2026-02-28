@@ -1,11 +1,15 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { LanguageContext } from '../../context/LanguageContext';
+import { AuthContext } from '../../context/AuthContext';
 
 const SearchProfiles = () => {
   const { t } = useContext(LanguageContext);
+  const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [profiles, setProfiles] = useState([]);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const [filters, setFilters] = useState({
     gender: '',
     minAge: '',
@@ -39,6 +43,14 @@ const SearchProfiles = () => {
   const handleChange = (e) => {
     const value = e.target.type === 'checkbox' ? (e.target.checked ? 'true' : '') : e.target.value;
     setFilters({...filters, [e.target.name]: value});
+  };
+
+  const handleProfileClick = (profileId) => {
+      if (!user) {
+          setShowLoginModal(true);
+      } else {
+          navigate(`/profile/${profileId}`);
+      }
   };
 
   return (
@@ -85,7 +97,7 @@ const SearchProfiles = () => {
       {/* Results */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {profiles.map(profile => (
-          <Link to={`/profile/${profile._id}`} key={profile._id} className="block group">
+          <div onClick={() => handleProfileClick(profile._id)} key={profile._id} className="block group cursor-pointer">
             <div className="bg-white shadow-lg rounded-xl overflow-hidden border border-gray-100 transition-transform transform group-hover:-translate-y-1 hover:shadow-xl flex flex-col h-full">
                 {/* Image Container: Aspect Ratio based for consistent look */}
                 <div className="w-full aspect-[4/5] bg-gray-200 flex items-center justify-center overflow-hidden relative">
@@ -122,10 +134,29 @@ const SearchProfiles = () => {
                     </div>
                 </div>
             </div>
-          </Link>
+          </div>
         ))}
         {profiles.length === 0 && <p className="text-center col-span-full py-10">{t('noProfiles')}</p>}
       </div>
+
+      {/* Login Modal */}
+      {showLoginModal && (
+          <div className="fixed inset-0 z-50 bg-black bg-opacity-60 flex items-center justify-center p-4" onClick={() => setShowLoginModal(false)}>
+              <div className="bg-white rounded-2xl p-8 max-w-sm w-full text-center shadow-2xl transform scale-100" onClick={e => e.stopPropagation()}>
+                  <div className="text-5xl mb-4">🔒</div>
+                  <h3 className="text-2xl font-bold text-gray-800 mb-2">{t('pleaseLoginTitle')}</h3>
+                  <p className="text-gray-600 mb-6">{t('pleaseLoginMsg')}</p>
+                  <div className="flex flex-col gap-3">
+                      <button onClick={() => navigate('/login')} className="bg-primary text-white font-bold py-3 rounded-xl w-full shadow hover:bg-red-700 transition">
+                          {t('loginNow')}
+                      </button>
+                      <button onClick={() => setShowLoginModal(false)} className="text-gray-500 font-medium py-2 hover:text-gray-800 transition">
+                          Cancel
+                      </button>
+                  </div>
+              </div>
+          </div>
+      )}
     </div>
   );
 };

@@ -86,6 +86,10 @@ export const translations = {
     noPhotos: "No Photos",
     uploading: "Uploading...",
     
+    // Modals
+    pleaseLoginTitle: "Login Required",
+    pleaseLoginMsg: "Please login to view member's complete profile and contact details.",
+    
     // Create/Edit
     basicDetails: "Basic Details",
     socialEducation: "Social & Education",
@@ -179,6 +183,10 @@ export const translations = {
     addPhotos: "और फोटो जोड़ें",
     noPhotos: "कोई फोटो नहीं",
     uploading: "अपलोड हो रहा है...",
+
+    // Modals
+    pleaseLoginTitle: "लॉगिन आवश्यक है",
+    pleaseLoginMsg: "सदस्य का पूरा प्रोफाइल और संपर्क विवरण देखने के लिए कृपया लॉगिन करें।",
 
     // Create/Edit
     basicDetails: "मूल विवरण",

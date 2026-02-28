@@ -1,12 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { LanguageContext } from '../context/LanguageContext';
+import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 
 const Home = () => {
     const { t } = useContext(LanguageContext);
+  const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
     const [latestMales, setLatestMales] = useState([]);
     const [latestFemales, setLatestFemales] = useState([]);
+  const [showLoginModal, setShowLoginModal] = useState(false);
     
     useEffect(() => {
         const fetchLatest = async () => {
@@ -25,6 +29,14 @@ const Home = () => {
         fetchLatest();
     }, []);
 
+  const handleProfileClick = (profileId) => {
+    if (!user) {
+      setShowLoginModal(true);
+    } else {
+      navigate(`/profile/${profileId}`);
+    }
+  };
+
     const ProfileCard = ({ profile }) => (
         <div className="bg-white shadow-lg rounded-xl overflow-hidden border border-gray-100 min-w-[280px] md:min-w-[320px] snap-start">
             <div className="h-64 bg-gray-200 flex items-center justify-center overflow-hidden">
@@ -40,9 +52,9 @@ const Home = () => {
             <div className="p-4 text-left">
                 <h3 className="text-xl font-bold text-gray-800">{profile.name}, {profile.age}</h3>
                 <p className="text-gray-600">{profile.village}, {profile.district}</p>
-                <Link to={`/profile/${profile._id}`} className="block mt-3 text-center bg-gray-50 hover:bg-gray-100 text-primary font-bold py-2 rounded-lg border border-gray-200 transition-colors">
+                <button onClick={() => handleProfileClick(profile._id)} className="block mt-3 text-center bg-gray-50 hover:bg-gray-100 text-primary font-bold py-2 rounded-lg border border-gray-200 transition-colors">
                     {t('viewDetails')}
-                </Link>
+                </button>
             </div>
         </div>
     );
@@ -172,8 +184,25 @@ const Home = () => {
           </div>
       </div>
 
-    </div>
-  );
+      {/* Login Modal */}
+      {showLoginModal && (
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-60 flex items-center justify-center p-4" onClick={() => setShowLoginModal(false)}>
+          <div className="bg-white rounded-2xl p-8 max-w-sm w-full text-center shadow-2xl" onClick={e => e.stopPropagation()}>
+            <div className="text-5xl mb-4">🔒</div>
+            <h3 className="text-2xl font-bold text-gray-800 mb-2">{t('pleaseLoginTitle')}</h3>
+            <p className="text-gray-600 mb-6">{t('pleaseLoginMsg')}</p>
+            <div className="flex flex-col gap-3">
+              <button onClick={() => navigate('/login')} className="bg-primary text-white font-bold py-3 rounded-xl w-full shadow hover:bg-red-700 transition">
+                {t('loginNow')}
+              </button>
+              <button onClick={() => setShowLoginModal(false)} className="text-gray-500 font-medium py-2 hover:text-gray-800 transition">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      </div>)
 };
 
 export default Home;
