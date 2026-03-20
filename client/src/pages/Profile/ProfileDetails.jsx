@@ -133,7 +133,7 @@ const ProfileDetails = () => {
         <div className="w-full md:w-1/3 flex justify-center md:block">
             {profile.photos && profile.photos.length > 0 ? (
                  <div className="w-64 h-64 md:w-full md:h-80 rounded-xl overflow-hidden shadow-lg border border-gray-100 bg-gray-100 relative group cursor-pointer" onClick={() => setSelectedImage(profile.photos[0])}>
-                     <img src={`http://localhost:5001${profile.photos[0]}`} className="w-full h-full object-cover transition-transform hover:scale-105" alt="Profile Main" />
+                     <img src={profile.photos[0].startsWith('http') ? profile.photos[0] : `http://localhost:5001${profile.photos[0]}`} className="w-full h-full object-cover transition-transform hover:scale-105" alt="Profile Main" />
                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 flex items-center justify-center transition-all">
                          <span className="opacity-0 group-hover:opacity-100 text-white font-bold bg-black bg-opacity-50 px-3 py-1 rounded">View Photo</span>
                      </div>
@@ -237,7 +237,7 @@ const ProfileDetails = () => {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {profile.photos.map((p, idx) => (
                       <div key={idx} className="h-64 rounded-lg overflow-hidden shadow-md cursor-pointer relative group" onClick={() => setSelectedImage(p)}>
-                          <img src={`http://localhost:5001${p}`} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" alt={`Gallery ${idx}`} />
+                          <img src={p.startsWith('http') ? p : `http://localhost:5001${p}`} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" alt={`Gallery ${idx}`} />
                           <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all"></div>
                           {user && user.userId === profile.userId && (
                               <button 
@@ -261,7 +261,7 @@ const ProfileDetails = () => {
       {selectedImage && (
           <div className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center p-4" onClick={() => setSelectedImage(null)}>
               <div className="relative max-w-4xl max-h-screen">
-                  <img src={`http://localhost:5001${selectedImage}`} className="max-w-full max-h-[85vh] rounded-lg shadow-2xl" alt="Full View" />
+                  <img src={selectedImage.startsWith('http') ? selectedImage : `http://localhost:5001${selectedImage}`} className="max-w-full max-h-[85vh] rounded-lg shadow-2xl" alt="Full View" />
                   <button className="absolute -top-10 right-0 text-white text-4xl hover:text-gray-300">&times;</button>
               </div>
           </div>

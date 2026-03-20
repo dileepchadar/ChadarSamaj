@@ -41,7 +41,7 @@ const Home = () => {
         <div className="bg-white shadow-lg rounded-xl overflow-hidden border border-gray-100 min-w-[280px] md:min-w-[320px] snap-start">
             <div className="h-64 bg-gray-200 flex items-center justify-center overflow-hidden">
                 {profile.photos && profile.photos.length > 0 ? (
-                    <img src={`http://localhost:5001${profile.photos[0]}`} alt={profile.name} className="w-full h-full object-cover transition-transform hover:scale-105" />
+                    <img src={profile.photos[0].startsWith('http') ? profile.photos[0] : `http://localhost:5001${profile.photos[0]}`} alt={profile.name} className="w-full h-full object-cover transition-transform hover:scale-105" />
                 ) : (
                     <div className="flex flex-col items-center">
                         <span className="text-gray-400 text-4xl">👤</span>

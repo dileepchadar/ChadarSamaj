@@ -165,7 +165,7 @@ const EditProfile = () => {
                     <div className="flex gap-4 overflow-x-auto">
                         {existingPhotos.map((src, index) => (
                             <div key={index} className="w-24 h-24 border rounded-lg overflow-hidden shadow-sm relative group">
-                                <img src={`http://localhost:5001${src}`} alt={`Current ${index + 1}`} className="w-full h-full object-cover" />
+                                <img src={src.startsWith('http') ? src : `http://localhost:5001${src}`} alt={`Current ${index + 1}`} className="w-full h-full object-cover" />
                                 <button
                                     type="button"
                                     onClick={() => {
