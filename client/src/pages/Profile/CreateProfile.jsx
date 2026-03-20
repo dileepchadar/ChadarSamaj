@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
+import { API_BASE } from '../../api';
 
 const CreateProfile = () => {
   const { user } = useContext(AuthContext);
@@ -63,13 +64,13 @@ const CreateProfile = () => {
             for(let i=0; i<photos.length; i++){
                 uploadData.append('photos', photos[i]);
             }
-            const res = await axios.post('http://localhost:5001/api/profiles/upload', uploadData);
+            const res = await axios.post(`${API_BASE}/api/profiles/upload`, uploadData);
             photoPaths = res.data.paths;
         }
 
         // Now create profile
         const profileData = { ...formData, userId: user.userId, photos: photoPaths };
-        await axios.post('http://localhost:5001/api/profiles', profileData);
+        await axios.post(`${API_BASE}/api/profiles`, profileData);
         navigate('/profile');
     } catch (err) {
         alert('Error creating profile: ' + (err.response?.data?.message || err.message));

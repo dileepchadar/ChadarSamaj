@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
+import { API_BASE } from '../../api';
 
 const Login = () => {
   const [mobile, setMobile] = useState('');
@@ -16,7 +17,7 @@ const Login = () => {
       return setError('Password must be at least 6 characters long');
     }
     try {
-      const res = await axios.post('http://localhost:5001/api/auth/login', { mobile, password });
+      const res = await axios.post(`${API_BASE}/api/auth/login`, { mobile, password });
       login(res.data.userId, res.data.role);
       navigate('/');
     } catch (err) {

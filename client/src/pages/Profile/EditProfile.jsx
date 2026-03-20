@@ -1,7 +1,8 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
+import { API_BASE } from '../../api';
 
 const EditProfile = () => {
   const { user } = useContext(AuthContext);
@@ -41,7 +42,7 @@ const EditProfile = () => {
               // Fetch existing profile
               // We assume user can only edit their own, so we could fetch by user ID or assume the ID passed is valid and verified on backend.
               // For simplicity, let's look up by user ID.
-              const res = await axios.get(`http://localhost:5001/api/profiles/user/${user.userId}`);
+              const res = await axios.get(`${API_BASE}/api/profiles/user/${user.userId}`);
               if(res.data) {
                   setFormData(res.data);
                   setExistingPhotos(res.data.photos || []);
@@ -80,14 +81,14 @@ const EditProfile = () => {
             for(let i=0; i<photos.length; i++){
                 uploadData.append('photos', photos[i]);
             }
-            const res = await axios.post('http://localhost:5001/api/profiles/upload', uploadData);
+            const res = await axios.post(`${API_BASE}/api/profiles/upload`, uploadData);
             // Append new photos
             const newPaths = res.data.paths;
             photoPaths = [...photoPaths, ...newPaths];
         }
 
         const updatedData = { ...formData, photos: photoPaths };
-        await axios.put(`http://localhost:5001/api/profiles/${formData._id}`, updatedData);
+        await axios.put(`${API_BASE}/api/profiles/${formData._id}`, updatedData);
         navigate('/profile');
     } catch (err) {
         alert('Error updating profile: ' + (err.response?.data?.message || err.message));
@@ -165,7 +166,7 @@ const EditProfile = () => {
                     <div className="flex gap-4 overflow-x-auto">
                         {existingPhotos.map((src, index) => (
                             <div key={index} className="w-24 h-24 border rounded-lg overflow-hidden shadow-sm relative group">
-                                <img src={src.startsWith('http') ? src : `http://localhost:5001${src}`} alt={`Current ${index + 1}`} className="w-full h-full object-cover" />
+                                <img src={src.startsWith('http') ? src : `${API_BASE}${src}`} alt={`Current ${index + 1}`} className="w-full h-full object-cover" />
                                 <button
                                     type="button"
                                     onClick={() => {

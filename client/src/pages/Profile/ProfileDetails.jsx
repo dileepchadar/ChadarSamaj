@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { LanguageContext } from '../../context/LanguageContext';
+import { API_BASE } from '../../api';
 
 const ProfileDetails = () => {
   const { id } = useParams();
@@ -18,7 +19,7 @@ const ProfileDetails = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await axios.get(`http://localhost:5001/api/profiles/${id}`);
+        const res = await axios.get(`${API_BASE}/api/profiles/${id}`);
         setProfile(res.data);
         if(res.data.photos && res.data.photos.length > 0) {
             setMainImage(res.data.photos[0]);
@@ -35,7 +36,7 @@ const ProfileDetails = () => {
     const reason = window.prompt("Why are you reporting this profile?");
     if (reason) {
         try {
-            await axios.post(`http://localhost:5001/api/profiles/${id}/report`, { reason, reportedBy: user.userId });
+            await axios.post(`${API_BASE}/api/profiles/${id}/report`, { reason, reportedBy: user.userId });
             alert('Profile reported successfully.');
         } catch (err) {
             alert('Error reporting profile.');
@@ -59,12 +60,12 @@ const ProfileDetails = () => {
         }
 
         // 1. Upload new photos
-        const res = await axios.post('http://localhost:5001/api/profiles/upload', uploadData);
+        const res = await axios.post(`${API_BASE}/api/profiles/upload`, uploadData);
         const newPaths = res.data.paths;
 
         // 2. Update profile with combined list
         const updatedPhotos = [...(profile.photos || []), ...newPaths];
-        await axios.put(`http://localhost:5001/api/profiles/${profile._id}`, { ...profile, photos: updatedPhotos });
+        await axios.put(`${API_BASE}/api/profiles/${profile._id}`, { ...profile, photos: updatedPhotos });
 
         // 3. Update local state
         setProfile({ ...profile, photos: updatedPhotos });
@@ -86,7 +87,7 @@ const ProfileDetails = () => {
         const updatedPhotos = profile.photos.filter(p => p !== photoToDelete);
         
         // Update on server
-        await axios.put(`http://localhost:5001/api/profiles/${profile._id}`, { ...profile, photos: updatedPhotos });
+        await axios.put(`${API_BASE}/api/profiles/${profile._id}`, { ...profile, photos: updatedPhotos });
         
         // Update local state
         setProfile({ ...profile, photos: updatedPhotos });
@@ -101,7 +102,7 @@ const ProfileDetails = () => {
   const handleDelete = async () => {
       if(!window.confirm('Are you sure you want to delete this profile?')) return;
       try {
-          await axios.delete(`http://localhost:5001/api/admin/profile/${id}`);
+          await axios.delete(`${API_BASE}/api/admin/profile/${id}`);
           alert('Profile deleted.');
           navigate('/search');
       } catch (err) {
@@ -113,7 +114,7 @@ const ProfileDetails = () => {
       const confirmStr = t('deleteAccountConfirm') || 'Are you sure you want to permanently delete your account and profile? This action cannot be undone.';
       if(!window.confirm(confirmStr)) return;
       try {
-          await axios.delete(`http://localhost:5001/api/auth/${user.userId}`);
+          await axios.delete(`${API_BASE}/api/auth/${user.userId}`);
           logout();
           alert(t('accountDeleted') || 'Account deleted successfully.');
           navigate('/');
@@ -133,7 +134,7 @@ const ProfileDetails = () => {
         <div className="w-full md:w-1/3 flex justify-center md:block">
             {profile.photos && profile.photos.length > 0 ? (
                  <div className="w-64 h-64 md:w-full md:h-80 rounded-xl overflow-hidden shadow-lg border border-gray-100 bg-gray-100 relative group cursor-pointer" onClick={() => setSelectedImage(profile.photos[0])}>
-                     <img src={profile.photos[0].startsWith('http') ? profile.photos[0] : `http://localhost:5001${profile.photos[0]}`} className="w-full h-full object-cover transition-transform hover:scale-105" alt="Profile Main" />
+                     <img src={profile.photos[0].startsWith('http') ? profile.photos[0] : `${API_BASE}${profile.photos[0]}`} className="w-full h-full object-cover transition-transform hover:scale-105" alt="Profile Main" />
                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 flex items-center justify-center transition-all">
                          <span className="opacity-0 group-hover:opacity-100 text-white font-bold bg-black bg-opacity-50 px-3 py-1 rounded">View Photo</span>
                      </div>
@@ -237,7 +238,7 @@ const ProfileDetails = () => {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {profile.photos.map((p, idx) => (
                       <div key={idx} className="h-64 rounded-lg overflow-hidden shadow-md cursor-pointer relative group" onClick={() => setSelectedImage(p)}>
-                          <img src={p.startsWith('http') ? p : `http://localhost:5001${p}`} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" alt={`Gallery ${idx}`} />
+                          <img src={p.startsWith('http') ? p : `${API_BASE}${p}`} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" alt={`Gallery ${idx}`} />
                           <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all"></div>
                           {user && user.userId === profile.userId && (
                               <button 
@@ -261,7 +262,7 @@ const ProfileDetails = () => {
       {selectedImage && (
           <div className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center p-4" onClick={() => setSelectedImage(null)}>
               <div className="relative max-w-4xl max-h-screen">
-                  <img src={selectedImage.startsWith('http') ? selectedImage : `http://localhost:5001${selectedImage}`} className="max-w-full max-h-[85vh] rounded-lg shadow-2xl" alt="Full View" />
+                  <img src={selectedImage.startsWith('http') ? selectedImage : `${API_BASE}${selectedImage}`} className="max-w-full max-h-[85vh] rounded-lg shadow-2xl" alt="Full View" />
                   <button className="absolute -top-10 right-0 text-white text-4xl hover:text-gray-300">&times;</button>
               </div>
           </div>

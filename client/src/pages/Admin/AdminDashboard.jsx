@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { AuthContext } from '../../context/AuthContext';
+import { API_BASE } from '../../api';
 
 const AdminDashboard = () => {
   const [profiles, setProfiles] = useState([]);
@@ -7,9 +9,9 @@ const AdminDashboard = () => {
 
   const fetchData = async () => {
       try {
-          const pRes = await axios.get('http://localhost:5001/api/admin/profiles');
+          const pRes = await axios.get(`${API_BASE}/api/admin/profiles`);
           setProfiles(pRes.data);
-          const rRes = await axios.get('http://localhost:5001/api/admin/reports');
+          const rRes = await axios.get(`${API_BASE}/api/admin/reports`);
           setReports(rRes.data);
       } catch (err) {
           console.error(err);
@@ -21,23 +23,23 @@ const AdminDashboard = () => {
   }, []);
 
   const handleApprove = async (id) => {
-      await axios.put(`http://localhost:5001/api/admin/approve/${id}`);
+      await axios.put(`${API_BASE}/api/admin/approve/${id}`);
       fetchData();
   };
 
   const handleUnapprove = async (id) => {
-      await axios.put(`http://localhost:5001/api/admin/unapprove/${id}`);
+      await axios.put(`${API_BASE}/api/admin/unapprove/${id}`);
       fetchData();
   };
 
   const handleDelete = async (id) => {
       if(!window.confirm('Delete this profile permanently?')) return;
-      await axios.delete(`http://localhost:5001/api/admin/profile/${id}`);
+      await axios.delete(`${API_BASE}/api/admin/profile/${id}`);
       fetchData();
   };
 
   const handleDismissReport = async (id) => {
-      await axios.delete(`http://localhost:5001/api/admin/report/${id}`);
+      await axios.delete(`${API_BASE}/api/admin/report/${id}`);
       fetchData();
   };
 

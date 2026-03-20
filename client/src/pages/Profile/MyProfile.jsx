@@ -1,7 +1,8 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
+import { API_BASE } from '../../api';
 
 const MyProfile = () => {
   const { user } = useContext(AuthContext);
@@ -11,7 +12,7 @@ const MyProfile = () => {
     const checkProfile = async () => {
       try {
         if(!user) return navigate('/login');
-        const res = await axios.get(`http://localhost:5001/api/profiles/user/${user.userId}`);
+        const res = await axios.get(`${API_BASE}/api/profiles/user/${user.userId}`);
         if (res.data) {
           // If profile exists, go to detail view
           navigate(`/profile/${res.data._id}`);

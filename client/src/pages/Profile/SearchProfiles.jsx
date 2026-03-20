@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { LanguageContext } from '../../context/LanguageContext';
 import { AuthContext } from '../../context/AuthContext';
+import { API_BASE } from '../../api';
 
 const SearchProfiles = () => {
   const { t } = useContext(LanguageContext);
@@ -29,7 +30,7 @@ const SearchProfiles = () => {
       for (const [key, value] of params.entries()) {
           if (!value) params.delete(key);
       }
-      const res = await axios.get(`http://localhost:5001/api/profiles?${params.toString()}`);
+      const res = await axios.get(`${API_BASE}/api/profiles?${params.toString()}`);
       setProfiles(res.data);
     } catch (err) {
       console.error(err);
@@ -102,7 +103,7 @@ const SearchProfiles = () => {
                 {/* Image Container: Aspect Ratio based for consistent look */}
                 <div className="w-full aspect-[4/5] bg-gray-200 flex items-center justify-center overflow-hidden relative">
                     {profile.photos && profile.photos.length > 0 ? (
-                        <img src={profile.photos[0].startsWith('http') ? profile.photos[0] : `http://localhost:5001${profile.photos[0]}`} alt={profile.name} className="w-full h-full object-cover" />
+                        <img src={profile.photos[0].startsWith('http') ? profile.photos[0] : `${API_BASE}${profile.photos[0]}`} alt={profile.name} className="w-full h-full object-cover" />
                     ) : (
                         <div className="flex flex-col items-center">
                             <span className="text-gray-400 text-5xl">👤</span>
