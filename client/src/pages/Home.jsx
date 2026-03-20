@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { LanguageContext } from '../context/LanguageContext';
 import { AuthContext } from '../context/AuthContext';
-import { API_BASE } from '../../api';
+import { API_BASE } from '../api';
 import axios from 'axios';
 
 const Home = () => {
