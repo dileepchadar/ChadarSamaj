@@ -8,7 +8,7 @@ import { API_BASE } from '@/api';
 
 const EditProfile = () => {
   const { user } = useContext(AuthContext);
-  const { id } = useParams(); // Should pass ID or get from user? 
+  // Removed unused useParams that was crashing the build
   // Actually usually /profile/edit/:id or just /profile/edit (implies my profile).
   // I'll assume /profile/edit route.
   
