@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Chadar Samaj (Next.js Version)
 
-## Getting Started
+This is the Next.js version of the Chadar Samaj frontend application. It was recently migrated from a Vite + React (CSR) application to a **Next.js 14** application utilizing the modern **App Router**.
 
-First, run the development server:
+## 🚀 Getting Started
 
+First, make sure you have **Node.js v18.17.0 or higher** installed.
+
+Install the dependencies (if you haven't already):
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Run the development server:
+```bash
+npm run dev
+```
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the application.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📂 Project Structure
 
-## Learn More
+This project uses the modern Next.js **App Router** with a **Route Group** `(pages)` to keep the root directory clean:
 
-To learn more about Next.js, take a look at the following resources:
+```
+client-next/
+├── src/
+│   ├── api.js                # Common API fetchers (Axios for Client, Fetch for Server)
+│   ├── app/
+│   │   ├── (pages)/          # Route Group: Keeps URL clean (e.g. /login instead of /pages/login)
+│   │   │   ├── admin/
+│   │   │   ├── create-profile/
+│   │   │   ├── edit-profile/
+│   │   │   ├── login/
+│   │   │   ├── profile/      # Contains MyProfile and [id] for specific profiles
+│   │   │   ├── register/
+│   │   │   ├── search/
+│   │   │   └── page.jsx      # Home Page (/)
+│   │   ├── globals.css       # Tailwind CSS v3 global styles
+│   │   └── layout.js         # Global HTML layout, Navbar, and Context Providers
+│   ├── components/           # Reusable UI components
+│   └── context/              # React Context (AuthContext, LanguageContext)
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🔄 Migration Notes (Vite -> Next.js)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+When this project was converted from Vite to Next.js, the following key changes were made:
 
-## Deploy on Vercel
+1. **Routing:** `react-router-dom` (`<Routes>`, `<Route>`, `useNavigate()`) was removed. We now use Next.js file-system routing.
+   - Used `useRouter()` from `next/navigation` instead of `useNavigate()`.
+   - Used Next.js `<Link href="...">` instead of React Router's `<Link to="...">`.
+2. **Client Components:** Since the Vite application relied heavily on React Hooks (`useEffect`, `useState`, `useContext`), the `"use client";` directive was added to the top of interactive components and pages so they continue functioning properly within the Next.js App Router.
+3. **Environment Variables:** `import.meta.env.VITE_API_URL` was changed to Next.js's standard `process.env.NEXT_PUBLIC_API_URL`.
+4. **Absolute Imports:** Instead of confusing relative paths (`../../context/`), this project now uses the Next.js import alias `@/`. (e.g., `import { AuthContext } from '@/context/AuthContext'`).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🖥️ Client vs. Server Components (SSR)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+By default, the pages migrated from Vite are **Client Components** (they have `"use client";` at the top). Next.js still pre-renders the basic HTML for these on the server for speed, but data is fetched on the client side after the page loads.
+
+### True Server-Side Rendering (SSR)
+If you want to convert a specific page to fetch data *on the server* (for better SEO and instant loading), use the "Wrapper" pattern:
+
+1. Create a **Server Component** (No `"use client"`) that fetches data using `fetchServerAPI` from `@/api`.
+2. Pass that data down as `props` to a **Client Component** (Has `"use client"`) which handles the interactivity (like buttons, modals, and state).
