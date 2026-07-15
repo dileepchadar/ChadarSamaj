@@ -110,7 +110,9 @@ router.post('/forgot-password', async (req, res) => {
     await db.update('users', user._id, { password: hashedPassword });
 
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true, // use SSL
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
