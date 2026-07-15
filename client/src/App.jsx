@@ -4,6 +4,8 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
+import ForgotPassword from './pages/Auth/ForgotPassword';
+import ChangePassword from './pages/Auth/ChangePassword';
 import CreateProfile from './pages/Profile/CreateProfile';
 import EditProfile from './pages/Profile/EditProfile';
 import SearchProfiles from './pages/Profile/SearchProfiles';
@@ -24,6 +26,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/change-password" element={<ChangePassword />} />
             <Route path="/create-profile" element={<CreateProfile />} />
             <Route path="/edit-profile" element={<EditProfile />} />
             <Route path="/search" element={<SearchProfiles />} />

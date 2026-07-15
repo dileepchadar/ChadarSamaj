@@ -38,6 +38,7 @@ const Navbar = () => {
             {user ? (
               <>
                 <Link to="/profile" className="text-gray-700 hover:text-primary font-medium px-3 py-2">{t('myProfile')}</Link>
+                <Link to="/change-password" className="text-gray-700 hover:text-primary font-medium px-3 py-2">Change Password</Link>
                 {user.role === 'admin' && (
                    <Link to="/admin" className="text-red-600 font-bold px-3 py-2">{t('adminPanel')}</Link>
                 )}
@@ -76,6 +77,7 @@ const Navbar = () => {
             {user ? (
               <>
                 <Link to="/profile" onClick={closeMenu} className="text-gray-700 hover:text-primary font-medium px-3 py-2 rounded hover:bg-gray-50">{t('myProfile')}</Link>
+                <Link to="/change-password" onClick={closeMenu} className="text-gray-700 hover:text-primary font-medium px-3 py-2 rounded hover:bg-gray-50">Change Password</Link>
                 {user.role === 'admin' && (
                    <Link to="/admin" onClick={closeMenu} className="text-red-600 font-bold px-3 py-2 rounded hover:bg-red-50">{t('adminPanel')}</Link>
                 )}
