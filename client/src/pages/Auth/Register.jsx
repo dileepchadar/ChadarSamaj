@@ -6,6 +6,7 @@ import { API_BASE } from '../../api';
 
 const Register = () => {
   const [mobile, setMobile] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const { login } = useContext(AuthContext);
@@ -17,7 +18,7 @@ const Register = () => {
       return setError('Password must be at least 6 characters long');
     }
     try {
-      const res = await axios.post(`${API_BASE}/api/auth/register`, { mobile, password });
+      const res = await axios.post(`${API_BASE}/api/auth/register`, { mobile, email, password });
       login(res.data.userId, 'user');
       navigate('/create-profile'); // Redirect to profile creation after register
     } catch (err) {
@@ -29,7 +30,7 @@ const Register = () => {
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-xl shadow-md">
       <h2 className="text-center text-primary">Register</h2>
       {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-      <form onSubmit={handleRegister} className="space-y-4">
+      <form onSubmit={handleRegister} className="space-y-4" autoComplete="off">
         <div>
           <label>Mobile Number</label>
           <input 
@@ -37,6 +38,18 @@ const Register = () => {
             value={mobile} 
             onChange={(e) => setMobile(e.target.value)} 
             placeholder="Enter 10 digit mobile number"
+            autoComplete="off"
+            required 
+          />
+        </div>
+        <div>
+          <label>Email Address</label>
+          <input 
+            type="email" 
+            value={email} 
+            onChange={(e) => setEmail(e.target.value)} 
+            placeholder="Enter your email"
+            autoComplete="off"
             required 
           />
         </div>
@@ -47,6 +60,7 @@ const Register = () => {
             value={password} 
             onChange={(e) => setPassword(e.target.value)} 
             placeholder="Minimum 6 characters"
+            autoComplete="new-password"
             required 
             minLength={6}
           />

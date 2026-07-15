@@ -29,24 +29,29 @@ const Login = () => {
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-xl shadow-md">
       <h2 className="text-center text-primary">Login</h2>
       {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-      <form onSubmit={handleLogin} className="space-y-4">
+      <form onSubmit={handleLogin} className="space-y-4" autoComplete="off">
         <div>
           <label>Mobile Number</label>
           <input 
             type="text" 
             value={mobile} 
             onChange={(e) => setMobile(e.target.value)} 
-            placeholder="Enter 10 digit mobile number"
+            placeholder="Enter 10 digit mobile number or email"
+            autoComplete="off"
             required 
           />
         </div>
         <div>
-          <label>Password</label>
+          <div className="flex justify-between items-center">
+            <label>Password</label>
+            <Link to="/forgot-password" className="text-sm text-blue-600 hover:underline">Forgot Password?</Link>
+          </div>
           <input 
             type="password" 
             value={password} 
             onChange={(e) => setPassword(e.target.value)} 
             placeholder="Enter your password"
+            autoComplete="new-password"
             required 
           />
         </div>

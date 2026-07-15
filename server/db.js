@@ -21,7 +21,7 @@ if (USE_SHEETS) {
                 console.log(`Creating missing sheet: ${name}`);
                 const headers = name === 'profiles' ? 
                     ['_id', 'createdAt', 'name', 'gender', 'age', 'height', 'maritalStatus', 'religion', 'caste', 'education', 'occupation', 'village', 'district', 'state', 'mobile', 'description', 'familyDetails', 'userId', 'photos', 'isApproved', 'gotra', 'fatherName', 'motherName', 'disability'] : 
-                    name === 'users' ? ['_id', 'createdAt', 'mobile', 'role', 'password'] :
+                    name === 'users' ? ['_id', 'createdAt', 'mobile', 'email', 'role', 'password'] :
                     ['_id', 'createdAt', 'profileId', 'reason', 'reportedBy'];
                 
                 await doc.addSheet({ title: name, headerValues: headers });
@@ -83,11 +83,26 @@ const sheetDB = {
         const sheetItem = { ...newItem };
         if (sheetItem.photos) sheetItem.photos = JSON.stringify(sheetItem.photos);
         
+        // Dynamically add any missing headers
+        const currentHeaders = sheet.headerValues || [];
+        const missingHeaders = Object.keys(sheetItem).filter(key => !currentHeaders.includes(key));
+        if (missingHeaders.length > 0) {
+            await sheet.setHeaderRow([...currentHeaders, ...missingHeaders]);
+        }
+        
         await sheet.addRow(sheetItem);
         return newItem;
     },
     update: async (collection, id, updates) => {
         const sheet = doc.sheetsByTitle[collection];
+        
+        // Dynamically add any missing headers
+        const currentHeaders = sheet.headerValues || [];
+        const missingHeaders = Object.keys(updates).filter(key => !currentHeaders.includes(key));
+        if (missingHeaders.length > 0) {
+            await sheet.setHeaderRow([...currentHeaders, ...missingHeaders]);
+        }
+
         const rows = await sheet.getRows();
         const row = rows.find(r => r._id == id);
         if (!row) return null;
